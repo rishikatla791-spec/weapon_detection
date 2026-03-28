@@ -2,13 +2,10 @@ import cv2
 import numpy as np
 
 # Load YOLO network
-net = cv2.dnn.readNet(
-    r"C:\Users\hussa\Downloads\Weapon_Detection_Project\Real-Time CCTV Video Analysis Deep Learning for Weapon Detection\yolov4.cfg",
-    r"C:\Users\hussa\Downloads\Weapon_Detection_Project\Real-Time CCTV Video Analysis Deep Learning for Weapon Detection\yolov4.weights"
-)
+net = cv2.dnn.readNet("yolov3_testing.cfg", "yolov3_training_2000.weights")
 
 # Load class names
-with open(r"C:\Users\hussa\Downloads\Weapon_Detection_Project\Real-Time CCTV Video Analysis Deep Learning for Weapon Detection\coco.names", "r") as f:
+with open("weapon.names", "r") as f:
     classes = [line.strip() for line in f.readlines()]
 
 layer_names = net.getLayerNames()
@@ -20,7 +17,7 @@ except:
     output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
 # Load image
-image = cv2.imread(r"C:\Users\hussa\Downloads\Weapon_Detection_Project\Real-Time CCTV Video Analysis Deep Learning for Weapon Detection\uploads\test_images\test_image.jpg")
+image = cv2.imread("test_image.jpg")
 
 # Check if the image was loaded
 if image is None:
@@ -71,7 +68,7 @@ for i in range(len(boxes)):
         cv2.putText(image, f"{label} {confidence:.2f}", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
 # Save the result image
-output_path = r"C:\Users\hussa\Downloads\Weapon_Detection_Project\Real-Time CCTV Video Analysis Deep Learning for Weapon Detection\uploads\test_images\result.jpg"
+output_path = "result.jpg"
 cv2.imwrite(output_path, image)
 
 print(f"Results saved to {output_path}")
