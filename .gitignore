@@ -1,0 +1,19 @@
+# Core Files
+.env
+__pycache__/
+*.pyc
+.DS_Store
+
+# Temporary storage
+uploads/*
+temp/*
+!uploads/.gitkeep
+!temp/.gitkeep
+
+# Large assets (tracked by Git LFS)
+# *.weights
+
+# IDE and System files
+.vscode/
+.idea/
+*.log

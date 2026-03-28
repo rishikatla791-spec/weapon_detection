@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WeaponShield AI – Enhanced Weapon Detection System</title>
+  <meta name="description" content="Upload an image or video to detect weapons in real-time using a deep learning YOLO model." />
+  <link rel="icon" href="/static/favicon.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-icon">🛡️</span>
+        <div class="brand-text">
+          <h1 class="brand-title">WeaponShield AI</h1>
+          <p class="brand-sub">Enhanced Weapon Detection · Deep Learning</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <span class="badge badge-yolo">YOLOv3</span>
+        <span class="badge badge-cv">OpenCV</span>
+        <span class="badge badge-flask">Flask</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <p class="hero-label">🔍 AI-Powered Threat Analysis</p>
+      <h2 class="hero-heading">Detect Weapons Instantly<br/>with Deep Learning</h2>
+      <p class="hero-desc">
+        Upload an image or video file and let our YOLOv3 model scan each frame<br/>
+        for guns, knives, bats, and other weapons in real-time.
+      </p>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">YOLOv3</span><span class="stat-label">Model</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">&gt;50%</span><span class="stat-label">Confidence Threshold</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">MP4 · AVI · JPG</span><span class="stat-label">Supported Formats</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ MAIN UPLOAD PANEL ═══════════════ -->
+  <main class="main-content">
+
+    <div class="panel upload-panel">
+      <div class="panel-header">
+        <span class="panel-icon">📁</span>
+        <h3 class="panel-title">Upload File for Analysis</h3>
+      </div>
+
+      <!-- Drag & Drop Zone -->
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-zone-inner">
+          <div class="drop-icon" id="dropIcon">☁️</div>
+          <p class="drop-text" id="dropText">Drag &amp; drop your file here</p>
+          <p class="drop-sub">or click below to browse</p>
+          <input type="file" id="fileInput" name="file" accept="image/*,video/*" hidden />
+          <button class="btn btn-secondary" id="browseBtn" onclick="document.getElementById('fileInput').click()">
+            Browse Files
+          </button>
+          <p class="drop-formats">Supported: JPG · PNG · MP4 · AVI · MOV</p>
+        </div>
+      </div>
+
+      <!-- File Preview Card -->
+      <div class="file-preview" id="filePreview" style="display:none;">
+        <div class="file-preview-icon" id="fileTypeIcon">📄</div>
+        <div class="file-preview-info">
+          <p class="file-name" id="fileName">—</p>
+          <p class="file-meta" id="fileMeta">—</p>
+        </div>
+        <button class="btn-icon" id="clearFileBtn" title="Remove file" onclick="clearFile()">✕</button>
+      </div>
+
+      <!-- Analyze Button -->
+      <button class="btn btn-primary" id="analyzeBtn" onclick="startDetection()" disabled>
+        <span class="btn-icon-left">🔍</span>
+        Run Detection
+      </button>
+    </div>
+
+    <!-- ═══ LOADING STATE ═══ -->
+    <div class="loading-panel" id="loadingPanel" style="display:none;">
+      <div class="spinner-ring"></div>
+      <div class="loading-text">
+        <p class="loading-title" id="loadingTitle">Analyzing file…</p>
+        <p class="loading-sub" id="loadingSub">Running YOLO inference on frames</p>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+
+    <!-- ═══ RESULT PANEL ═══ -->
+    <div class="result-panel" id="resultPanel" style="display:none;">
+
+      <!-- Threat indicator -->
+      <div class="threat-card" id="threatCard">
+        <div class="threat-icon" id="threatIcon">✅</div>
+        <div class="threat-info">
+          <p class="threat-status" id="threatStatus">No Weapon Detected</p>
+          <p class="threat-detail" id="threatDetail">The uploaded media appears to be safe.</p>
+        </div>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="result-grid" id="resultGrid"></div>
+
+      <!-- Analyze Another -->
+      <button class="btn btn-ghost" onclick="resetUI()">
+        ↩ Analyze Another File
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+  <section class="how-section">
+    <h3 class="how-title">How It Works</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon">📤</div>
+        <h4>Upload Media</h4>
+        <p>Choose an image or video from your device via the upload panel above.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon">🧠</div>
+        <h4>YOLO Inference</h4>
+        <p>Flask sends each frame through a YOLOv3 model trained on weapon classes.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon">📊</div>
+        <h4>Results Returned</h4>
+        <p>The API responds with detected weapon type, confidence, and frame count.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer class="site-footer">
+    <p>Powered by <strong>Flask · OpenCV · YOLOv3</strong></p>
+    <p class="footer-credit">Developed for Academic Research — Enhanced Weapon Detection System</p>
+    <a href="https://github.com/BhanuPrakashBandi" target="_blank" class="github-link" rel="noopener">
+      <img src="/static/github.png" alt="GitHub" class="github-logo" />
+    </a>
+  </footer>
+
+  <script src="/static/app.js?v=3"></script>
+</body>
+</html>
